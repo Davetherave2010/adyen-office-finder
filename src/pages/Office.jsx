@@ -67,7 +67,7 @@ class Office extends React.Component{
 
   getCurrentWeather = async () => {
     const selectedOffice = this.getSelectedLocation()
-    const weatherResponse = await fetch(`http://dataservice.accuweather.com/currentconditions/v1/${selectedOffice.weatherKey}?apikey=${process.env.REACT_APP_ACCUWEATHER_TOKEN}`)
+    const weatherResponse = await fetch(`https://dataservice.accuweather.com/currentconditions/v1/${selectedOffice.weatherKey}?apikey=${process.env.REACT_APP_ACCUWEATHER_TOKEN}`)
     const weather = await weatherResponse.json()
 
     this.setState({

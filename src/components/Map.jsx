@@ -3,14 +3,19 @@ import mapboxgl from 'mapbox-gl/dist/mapbox-gl.js'
 import getMapDot from './pulsingDot'
 
 export default class Map extends React.Component {
-  showCurrentLocation = (latitude, longitude) => {
+  flyTo = (latitude, longitude, zoom = 9) => {
     this.map.flyTo({
       center: [
         longitude,
         latitude
       ],
+      zoom,
       essential: true
     })
+  }
+
+  showCurrentLocation = (latitude, longitude) => {
+    this.flyTo(latitude, longitude)
 
     const pulsingDot = getMapDot(this.map)
 
@@ -47,9 +52,9 @@ export default class Map extends React.Component {
   addOfficeLocationMarkers = () => {
     const { offices } = this.props
 
-    offices.map(office => {
+    offices.forEach(office => {
       new mapboxgl.Marker()
-        .setLngLat([office.long, office.lat])
+        .setLngLat([office.longitude, office.latitude])
         .addTo(this.map)
     })
   }

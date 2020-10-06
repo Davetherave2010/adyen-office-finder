@@ -1,32 +1,30 @@
 import React from 'react'
-import Map from '../components/Map'
+import {
+  withRouter,
+  Link
+} from "react-router-dom";
 
-export default class Home extends React.Component{
+import * as turf from '@turf/turf'
+import OfficeSelector from '../components/OfficeSelector'
+
+
+class Home extends React.Component{
   constructor(props) {
     super(props)
 
-    this.map = React.createRef();
+    this.otherOfficeSelector = React.createRef();
     this.state = {
-      status: null,
-      position: null,
-      offices: [
-        {
-          name: 'Amsterdam',
-          lat: 52.376510,
-          long: 4.905960
-        },
-        {
-          name: 'Madrid',
-          lat: 40.435570,
-          long: -3.689590
-        },
-        {
-          name: 'Bucharest',
-          lat: 44.426765,
-          long: 26.102537
-        }
-      ]
+      status: null
     }
+  }
+
+  measureDistance = (from, to) => {
+    const fromPoint = turf.point([from.longitude, from.latitude]);
+    const toPoint = turf.point([to.longitude, to.latitude]);
+    const options = { units: 'kilometers' };
+    const distance = Math.round(turf.distance(fromPoint, toPoint, options))
+
+    return `${distance}km`;
   }
 
   shareLocation = () => {
@@ -36,36 +34,65 @@ export default class Home extends React.Component{
 
     this.setState({ status: 'locating' })
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      async (location) => {
+        const { map, offices, setPosition } = this.props
+        const { latitude, longitude } = location.coords
+
         this.setState({ 
           status: 'found',
-          position: position.coords
         })
 
-        this.map.current.showCurrentLocation(this.state.position.latitude, this.state.position.longitude)
+        setPosition(location.coords)
+
+        map.current.showCurrentLocation(latitude, longitude)
+
+        offices.forEach(office => {
+          const updatedOffice = {
+            ...office,
+            distance: this.measureDistance(location.coords, office)
+          }
+          this.setState({
+            ...offices,
+            updatedOffice
+          })
+        })
       },
       (err) => this.setState({ status: 'error' }))
   }
-
+  
   render () {
-    const { status, offices } = this.state
+    const { status } = this.state
+    const { offices, position, history } = this.props
+    console.log("status", status)
+    const sortedOffices = offices.sort((a, b) => {
+      if (a.distance <= b.distance) return -1
+      if (a.distance === b.distance) return 0
+      return 1
+    })
+
     return (
       <>
-        <Map ref={this.map} offices={offices}/>
         <h1>Welcome to Adyen Office Finder</h1>
-        <p>Share your location to find your closest office or select an office from the list</p>
-        {status ? <p>{status}</p> : null} 
-        <button onClick={this.shareLocation}>
-          Share my location
-      </button>
 
-        <select>
-          {offices.map(office => (
-            <option key={office.name}>{office.name}</option>
-          ))}
-        </select>
+        {status !== 'found' && <div>
+          <p>Share your location to find your closest office or select an office from the list</p>
+          {status && <p>{status}</p>}
+          {!position && <button onClick={this.shareLocation}>
+            Share my location
+          </button>}
+          <OfficeSelector offices={offices} onButtonClick={(value) => history.push(`/offices/${value}`)} />
+        </div>}
+
+        {status === 'found' && <div>
+          <h2>Your closest office is <Link to={`/offices/${sortedOffices[0].name}`}>{sortedOffices[0].name}</Link></h2>
+
+          <p>Or you can checkout other offices</p>
+
+          <OfficeSelector offices={sortedOffices.slice(1)} onButtonClick={(value) => history.push(`/offices/${value}`)} />
+        </div>}
       </>
     )
   }
 }
 
+export default withRouter(Home)

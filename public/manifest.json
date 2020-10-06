@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Adyen Office Finder",
+  "name": "Adyen Office Finder",
   "icons": [
     {
       "src": "favicon.ico",

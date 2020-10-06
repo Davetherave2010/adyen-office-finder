@@ -63,7 +63,9 @@ export default class Map extends React.Component {
     this.map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/streets-v11',
-      attributionControl: false
+      attributionControl: false,
+      center: [-1.1306, 47.8547],
+      zoom: 3
     })
 
     this.addOfficeLocationMarkers()

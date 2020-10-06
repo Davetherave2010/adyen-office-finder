@@ -135,10 +135,9 @@ class Office extends React.Component{
   render() {
     const { offices, position, match } = this.props
     const { officeName } = match.params;
-    const { attemptedToFindFlights, flights, findingFlights, currentWeather } = this.state
+    const { attemptedToFindFlights, flights, findingFlights } = this.state
     const hasNoFlights = !flights.data || flights.data.length === 0
   
-    console.log("currentWeather", currentWeather);
     return (
       <>
         <h3 className="title-case">{officeName}</h3>
@@ -159,7 +158,6 @@ class Office extends React.Component{
             </div>
           )}
         </div>}
-        
       </>
     )
   }

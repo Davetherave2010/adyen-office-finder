@@ -5,6 +5,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  text-align: center;
 }
 
 code {
@@ -43,6 +45,7 @@ code {
   border-color: #F8C300 transparent #F8C300 transparent;
   animation: rotate 1.2s linear infinite;
 }
+
 @keyframes rotate {
   0% {
     transform: rotate(0deg);
@@ -50,4 +53,8 @@ code {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.share-location-button {
+  margin-bottom: 20px;
 }

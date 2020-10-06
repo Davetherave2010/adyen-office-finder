@@ -63,7 +63,6 @@ class Home extends React.Component{
   render () {
     const { status } = this.state
     const { offices, position, history } = this.props
-    console.log("status", status)
     const sortedOffices = offices.sort((a, b) => {
       if (a.distance <= b.distance) return -1
       if (a.distance === b.distance) return 0
@@ -77,10 +76,12 @@ class Home extends React.Component{
         {status !== 'found' && <div>
           <p>Share your location to find your closest office or select an office from the list</p>
           {status && <p>{status}</p>}
-          {!position && <button onClick={this.shareLocation}>
+          {!position && <button className="share-location-button" onClick={this.shareLocation}>
             Share my location
           </button>}
-          <OfficeSelector offices={offices} onButtonClick={(value) => history.push(`/offices/${value}`)} />
+          <div>
+            <OfficeSelector offices={offices} onButtonClick={(value) => history.push(`/offices/${value}`)} />
+          </div>
         </div>}
 
         {status === 'found' && <div>

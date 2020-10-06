@@ -111,8 +111,9 @@ class Office extends React.Component{
     const { currentWeather } = this.state
 
     if (!currentWeather) return null
-
     switch (currentWeather.WeatherText) {
+      case 'Clear':
+        return <span role="img" aria-label="Clear">🏙</span>
       case 'Rain':
         return <span role="img" aria-label="Raining">🌧</span>
       case 'Cloudy':

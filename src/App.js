@@ -9,7 +9,6 @@ import Home from './pages/Home'
 import Offices from './pages/Offices'
 
 import Map from './components/Map'
-import './App.css';
 
 class App extends React.Component{
   constructor(props) {

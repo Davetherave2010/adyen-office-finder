@@ -24,7 +24,7 @@ class Home extends React.Component{
     const options = { units: 'kilometers' };
     const distance = Math.round(turf.distance(fromPoint, toPoint, options))
 
-    return `${distance}km`;
+    return distance;
   }
 
   shareLocation = () => {
@@ -35,7 +35,7 @@ class Home extends React.Component{
     this.setState({ status: 'locating' })
     navigator.geolocation.getCurrentPosition(
       async (location) => {
-        const { map, offices, setPosition } = this.props
+        const { map, offices, setOffices, setPosition } = this.props
         const { latitude, longitude } = location.coords
 
         this.setState({ 
@@ -46,16 +46,14 @@ class Home extends React.Component{
 
         map.current.showCurrentLocation(latitude, longitude)
 
-        offices.forEach(office => {
-          const updatedOffice = {
+        const updatedOffices = offices.map(office => {
+          return {
             ...office,
             distance: this.measureDistance(location.coords, office)
           }
-          this.setState({
-            ...offices,
-            updatedOffice
-          })
         })
+
+        setOffices(updatedOffices)
       },
       (err) => this.setState({ status: 'error' }))
   }

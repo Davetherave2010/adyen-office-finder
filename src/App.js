@@ -57,7 +57,12 @@ class App extends React.Component{
               <Offices map={this.map} offices={offices} position={position}/>
             </Route>
             <Route path="/">
-              <Home map={this.map} offices={offices} position={position} setPosition={(pos) => this.setState({ position: pos })} />
+              <Home
+                map={this.map}
+                offices={offices}
+                setOffices={(to) => this.setState({offices: to})}
+                position={position}
+                setPosition={(pos) => this.setState({ position: pos })} />
             </Route>
           </Switch>
         </div>
